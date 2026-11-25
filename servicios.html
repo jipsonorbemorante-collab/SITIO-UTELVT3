@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTLVTE - Servicios</title>
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/2/20/ESCUDETO_UTE-LVT.png" type="image/x-icon">
+    <link rel="stylesheet" href="asistente.css">
+    <style>
+        :root { --utlvte-green: #008a3c; --utlvte-red: #d9232a; --dark-color: #222222; --bg-light: #f4f6f8; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--dark-color); min-height: 100vh; position: relative; }
+        body::before { content: ""; position: fixed; top: 50%; right: 2%; transform: translateY(-50%); width: 500px; height: 500px; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/ESCUDETO_UTE-LVT.png/500px-ESCUDETO_UTE-LVT.png'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.10; pointer-events: none; z-index: -1; }
+        .top-header { background: #fff; padding: 15px 20px; display: flex; justify-content: center; border-bottom: 1px solid #e0e0e0; }
+        .brand-container { display: flex; align-items: center; gap: 20px; }
+        .header-logo { height: 85px; }
+        .brand-titles { text-align: center; }
+        .utlvte-main { color: var(--utlvte-green); font-size: 3rem; font-weight: 900; font-style: italic; line-height: 1; }
+        .utlvte-sub { color: var(--utlvte-red); font-size: 1.15rem; font-weight: bold; font-style: italic; }
+        .main-nav { background: var(--utlvte-green); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .nav-list { display: flex; justify-content: center; list-style: none; }
+        .nav-link { display: block; padding: 14px 22px; color: #fff; text-decoration: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
+        .nav-link:hover { background: rgba(0, 0, 0, 0.15); }
+        .nav-item.active .nav-link { color: #ff3b30; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 25px; }
+        .card { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.06); border-top: 5px solid var(--utlvte-green); }
+        .card h2 { color: var(--utlvte-green); margin-bottom: 12px; }
+        .card ul { margin-left: 20px; line-height: 1.8; }
+        footer { background: var(--dark-color); color: white; text-align: center; padding: 25px; margin-top: 50px; }
+
+        /* CHATBOT */
+        .chatbot-btn { position: fixed; bottom: 25px; right: 25px; background: var(--utlvte-green); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 26px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 2000; }
+        .chat-window { display: none; position: fixed; bottom: 95px; right: 25px; width: 320px; height: 420px; background: #fff; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.25); flex-direction: column; z-index: 2000; }
+        .chat-header { background: var(--utlvte-green); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.88rem; }
+        .bot-msg { background: #e4e6eb; align-self: flex-start; }
+        .user-msg { background: var(--utlvte-green); color: white; align-self: flex-end; }
+        .chat-footer { display: flex; padding: 10px; border-top: 1px solid #ddd; }
+        .chat-footer input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .chat-footer button { background: var(--utlvte-green); color: white; border: none; padding: 8px 12px; margin-left: 5px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header class="top-header">
+        <div class="brand-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/ESCUDETO_UTE-LVT.png/500px-ESCUDETO_UTE-LVT.png" class="header-logo">
+            <div class="brand-titles">
+                <div class="utlvte-sub">UNIVERSIDAD TÉCNICA "LUIS VARGAS TORRES" DE ESMERALDAS</div>
+                <div class="utlvte-sub">SEDE SANTO DOMINGO - LA CONCORDIA</div>
+                <div class="utlvte-main">UTLVTE</div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="index.html" class="nav-link">Inicio</a></li>
+            <li class="nav-item"><a href="historia.html" class="nav-link">Historia</a></li>
+            <li class="nav-item"><a href="nosotros.html" class="nav-link">Nosotros</a></li>
+            <li class="nav-item active"><a href="servicios.html" class="nav-link">Servicios</a></li>
+            <li class="nav-item"><a href="carreras.html" class="nav-link">Carreras</a></li>
+            <li class="nav-item"><a href="contacto.html" class="nav-link">Contacto</a></li>
+            <li class="nav-item"><a href="juego.html" class="nav-link">Juego</a></li>
+            <li class="nav-item"><a href="emociones.html" class="nav-link">Emociones</a></li>
+            <li class="nav-item"><a href="promedio.html" class="nav-link">Promedio</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section class="card">
+            <h2>Servicios Académicos y Estudiantiles</h2>
+            <p>La Sede Santo Domingo ofrece los siguientes servicios integrales a toda la comunidad universitaria:</p>
+            <ul>
+                <li><strong>Proceso de Admisión y Nivelación:</strong> Orientación paso a paso para aspirantes a cupos universitarios.</li>
+                <li><strong>Secretaría Académica:</strong> Certificados de estudios, legalizaciones e historial de calificaciones.</li>
+                <li><strong>Atención al Estudiante:</strong> Consultas de horarios, aulas asignadas y tutoria de nivelación.</li>
+                <li><strong>Biblioteca Digital y Física:</strong> Repositorio institucional y recursos bibliográficos para investigación.</li>
+                <li><strong>Carreras que ofrece la UTELVT:</strong> Administracion de Empresas, Contabilidad y Auditoria, Tecnologias de la Información (TICS).</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- CHATBOT -->
+    <button class="chatbot-btn" onclick="toggleChat()">💬</button>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header"><span>Asistente UTLVTE</span><button onclick="toggleChat()" style="background:none;border:none;color:white;cursor:pointer;">✕</button></div>
+        <div class="chat-body" id="chatBody"><div class="message bot-msg">¡Hola! Bienvenido al portal oficial. ¿En qué puedo ayudarte?</div></div>
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Escribe tu consulta..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2026 Universidad Técnica Luis Vargas Torres de Esmeraldas - Sede Santo Domingo</p></footer>
+
+    <!-- === INICIO SISTEMA DE GESTOS MEDIAPIPE (COPIAR Y PEGAR ANTES DE </body>) === -->
+<div id="panel-gestos" style="position: fixed; bottom: 15px; left: 15px; z-index: 99999; background: rgba(0, 77, 38, 0.9); color: white; padding: 8px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-family: sans-serif; text-align: center; width: 150px;">
+  <video id="webcam-gestos" autoplay playsinline muted style="width: 100%; border-radius: 8px; transform: scaleX(-1); display: block; background: #000;"></video>
+  <div id="estado-gesto" style="font-size: 11px; margin-top: 5px; font-weight: bold;">Cargando IA...</div>
+</div>
+
+<script type="module">
+  import {
+    FilesetResolver,
+    GestureRecognizer
+  } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs";
+
+  const video = document.getElementById("webcam-gestos");
+  const estadoTexto = document.getElementById("estado-gesto");
+  let gestureRecognizer;
+  let lastVideoTime = -1;
+  let ultimoGesto = "";
+  let tiempoUltimo = 0;
+
+  async function iniciar() {
+    try {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+      );
+
+      gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+          delegate: "GPU"
+        },
+        runningMode: "VIDEO",
+        numHands: 1
+      });
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      video.addEventListener("loadeddata", () => {
+        estadoTexto.innerText = "✋ Listo (Haz un gesto)";
+        bucleDeteccion();
+      });
+    } catch (err) {
+      console.error(err);
+      estadoTexto.innerText = "❌ Activa la cámara / Live Server";
+    }
+  }
+
+  function bucleDeteccion() {
+    if (video.readyState >= 2 && video.currentTime !== lastVideoTime) {
+      lastVideoTime = video.currentTime;
+      const resultados = gestureRecognizer.recognizeForVideo(video, performance.now());
+
+      if (resultados.gestures && resultados.gestures.length > 0) {
+        const gesto = resultados.gestures[0][0];
+        if (gesto.score > 0.65 && gesto.categoryName !== "None") {
+          ejecutarGesto(gesto.categoryName);
+        }
+      }
+    }
+    requestAnimationFrame(bucleDeteccion);
+  }
+
+  function ejecutarGesto(nombre) {
+    const ahora = Date.now();
+    // Pausa de 1.2 segundos entre acciones para evitar repeticiones accidentales
+    if (nombre === ultimoGesto && ahora - tiempoUltimo < 1200) return;
+
+    ultimoGesto = nombre;
+    tiempoUltimo = ahora;
+
+    switch (nombre) {
+      case "Thumb_Up":
+        estadoTexto.innerText = "👍 Bajando...";
+        window.scrollBy({ top: 450, behavior: "smooth" });
+        break;
+
+      case "Thumb_Down":
+        estadoTexto.innerText = "👎 Subiendo...";
+        window.scrollBy({ top: -450, behavior: "smooth" });
+        break;
+
+      case "Open_Palm":
+        estadoTexto.innerText = "✋ Asistente";
+        // Busca cualquier botón del asistente en tu página y le hace clic
+        const btn = document.querySelector("#asistente-btn, .asistente-btn, #btn-asistente, [onclick*='asistente'], [onclick*='toggle']");
+        if (btn) btn.click();
+        break;
+
+      case "Victory":
+        estadoTexto.innerText = "✌️ Ir a Carreras";
+        if (!window.location.href.includes("carreras.html")) {
+          window.location.href = "carreras.html";
+        }
+        break;
+
+      case "Closed_Fist":
+        estadoTexto.innerText = "✊ Ir a Inicio";
+        if (!window.location.href.includes("index.html")) {
+          window.location.href = "index.html";
+        }
+        break;
+
+      case "Pointing_Up":
+        estadoTexto.innerText = "☝️ Ir a Juego";
+        if (!window.location.href.includes("juego.html")) {
+          window.location.href = "juego.html";
+        }
+        break;
+
+      case "ILoveYou":
+        estadoTexto.innerText = "🤟 Emociones";
+        if (!window.location.href.includes("emociones.html")) {
+          window.location.href = "emociones.html";
+        }
+        break;
+    }
+  }
+
+  iniciar();
+</script>
+<!-- === FIN SISTEMA DE GESTOS MEDIAPIPE === -->
+
+    <script src="asistente.js"></script>
+
+
+</body>
+</html>

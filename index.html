@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTLVTE - Inicio</title>
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/2/20/ESCUDETO_UTE-LVT.png" type="image/x-icon">
+    <style>
+        :root { --utlvte-green: #008a3c; --utlvte-red: #d9232a; --dark-color: #222222; --bg-light: #f4f6f8; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--dark-color); min-height: 100vh; position: relative; transition: background-color 0.4s ease; }
+        
+        /* MARCA DE AGUA DERECHA (10%) */
+        body::before {
+            content: ""; position: fixed; top: 50%; right: 2%; transform: translateY(-50%);
+            width: 500px; height: 500px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/ESCUDETO_UTE-LVT.png/500px-ESCUDETO_UTE-LVT.png');
+            background-repeat: no-repeat; background-position: center; background-size: contain;
+            opacity: 0.10; pointer-events: none; z-index: -1;
+        }
+
+        .top-header { background: #fff; padding: 15px 20px; display: flex; justify-content: center; border-bottom: 1px solid #e0e0e0; }
+        .brand-container { display: flex; align-items: center; gap: 20px; }
+        .header-logo { height: 85px; }
+        .brand-titles { text-align: center; }
+        .utlvte-main { color: var(--utlvte-green); font-size: 3rem; font-weight: 900; font-style: italic; line-height: 1; }
+        .utlvte-sub { color: var(--utlvte-red); font-size: 1.15rem; font-weight: bold; font-style: italic; }
+
+        .main-nav { background: var(--utlvte-green); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .nav-list { display: flex; justify-content: center; list-style: none; flex-wrap: wrap; }
+        .nav-link { display: block; padding: 14px 22px; color: #fff; text-decoration: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
+        .nav-link:hover { background: rgba(0, 0, 0, 0.15); }
+        .nav-item.active .nav-link { color: #ff3b30; }
+
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .hero-banner { background: linear-gradient(rgba(0, 138, 60, 0.85), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1200x350') center/cover; color: white; text-align: center; padding: 60px 20px; border-radius: 8px; }
+        .hero-banner h1 { font-size: 2.2rem; margin-bottom: 15px; }
+        
+        .grid-mv { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .card { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.06); border-top: 5px solid var(--utlvte-green); }
+        .card h2 { color: var(--utlvte-green); margin-bottom: 12px; }
+
+        footer { background: var(--dark-color); color: white; text-align: center; padding: 25px; margin-top: 50px; }
+        
+        /* CHATBOT DE TEXTO ORIGINAL (INTACTO) */
+        .chatbot-btn { position: fixed; bottom: 25px; right: 25px; background: var(--utlvte-green); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 26px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 2000; }
+        .chat-window { display: none; position: fixed; bottom: 95px; right: 25px; width: 320px; height: 420px; background: #fff; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.25); flex-direction: column; z-index: 2000; }
+        .chat-header { background: var(--utlvte-green); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.88rem; }
+        .bot-msg { background: #e4e6eb; align-self: flex-start; }
+        .user-msg { background: var(--utlvte-green); color: white; align-self: flex-end; }
+        .chat-footer { display: flex; padding: 10px; border-top: 1px solid #ddd; }
+        .chat-footer input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .chat-footer button { background: var(--utlvte-green); color: white; border: none; padding: 8px 12px; margin-left: 5px; border-radius: 4px; cursor: pointer; }
+
+        /* CHATBOX DE AUDIO (UBICADO ARRIBITA DEL CHAT DE TEXTO) */
+        .voicebot-btn { position: fixed; bottom: 95px; right: 25px; background: var(--utlvte-red); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 26px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 2001; }
+        .voice-window { display: none; position: fixed; bottom: 25px; right: 95px; width: 320px; height: 420px; background: #fff; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.25); flex-direction: column; z-index: 2001; overflow: hidden; }
+        .voice-header { background: var(--utlvte-red); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .voice-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .voice-footer { padding: 12px; border-top: 1px solid #ddd; background: #fff; text-align: center; }
+        .btn-hablar { width: 100%; background: var(--utlvte-red); color: white; border: none; padding: 12px; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-hablar:hover { opacity: 0.9; }
+        .btn-hablar.escuchando { background: var(--utlvte-green); animation: latido 1s infinite; }
+
+        @keyframes latido {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-header">
+        <div class="brand-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/ESCUDETO_UTE-LVT.png/500px-ESCUDETO_UTE-LVT.png" class="header-logo">
+            <div class="brand-titles">
+                <div class="utlvte-sub" id="sub1">UNIVERSIDAD TÉCNICA "LUIS VARGAS TORRES" DE ESMERALDAS</div>
+                <div class="utlvte-sub" id="sub2">SEDE SANTO DOMINGO - LA CONCORDIA</div>
+                <div class="utlvte-main">UTLVTE</div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <ul class="nav-list">
+            <li class="nav-item active"><a href="index.html" class="nav-link" data-es="Inicio" data-en="Home" data-pt="Início" data-fr="Accueil" data-it="Inizio">Inicio</a></li>
+            <li class="nav-item"><a href="historia.html" class="nav-link" data-es="Historia" data-en="History" data-pt="História" data-fr="Histoire" data-it="Storia">Historia</a></li>
+            <li class="nav-item"><a href="nosotros.html" class="nav-link" data-es="Nosotros" data-en="About Us" data-pt="Sobre Nós" data-fr="À Propos" data-it="Chi Siamo">Nosotros</a></li>
+            <li class="nav-item"><a href="servicios.html" class="nav-link" data-es="Servicios" data-en="Services" data-pt="Serviços" data-fr="Services" data-it="Servizi">Servicios</a></li>
+            <li class="nav-item"><a href="carreras.html" class="nav-link" data-es="Carreras" data-en="Majors" data-pt="Cursos" data-fr="Filières" data-it="Corsi">Carreras</a></li>
+            <li class="nav-item"><a href="contacto.html" class="nav-link" data-es="Contacto" data-en="Contact" data-pt="Contato" data-fr="Contact" data-it="Contatti">Contacto</a></li>
+            <li class="nav-item"><a href="juego.html" class="nav-link" data-es="Juego" data-en="Game" data-pt="Jogo" data-fr="Jeu" data-it="Gioco">Juego</a></li>
+            <li class="nav-item"><a href="emociones.html" class="nav-link" data-es="Emociones" data-en="Emotions" data-pt="Emoções" data-fr="Émotions" data-it="Emozioni">Emociones</a></li>
+            <li class="nav-item"><a href="promedio.html" class="nav-link" data-es="Promedio" data-en="GPA" data-pt="Média" data-fr="Moyenne" data-it="Media">Promedio</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section class="hero-banner">
+            <h1 id="tituloPrincipal">Bienvenidos a la Universidad Técnica "Luis Vargas Torres" Sede Santo Domingo</h1>
+            <p id="frasePrincipal"><b>"Con la determinación de Luis Vargas Torres y la fuerza de tus sueños, ningún examen es demasiado grande: hoy estudias, mañana lideras. ¡La UTLVTE te espera!"</b></p>
+        </section>
+    </main>
+
+    <!-- CHATBOT DE TEXTO ORIGINAL (INTACTO) -->
+    <button class="chatbot-btn" onclick="toggleChat()">💬</button>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header"><span>Asistente UTLVTE</span><button onclick="toggleChat()" style="background:none;border:none;color:white;cursor:pointer;">✕</button></div>
+        <div class="chat-body" id="chatBody"><div class="message bot-msg">¡Hola! Bienvenido al portal oficial. ¿En qué puedo ayudarte?</div></div>
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Escribe tu consulta..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <!-- CHATBOX DE AUDIO (ARRIBA DEL DE TEXTO) -->
+    <button class="voicebot-btn" onclick="toggleVoiceChat()" title="Asistente por Voz">🎙️</button>
+    <div class="voice-window" id="voiceWindow">
+        <div class="voice-header">
+            <span id="voiceHeaderTitle">Asistente de Audio UTLVTE</span>
+            <button onclick="toggleVoiceChat()" style="background:none;border:none;color:white;cursor:pointer;">✕</button>
+        </div>
+        <div class="voice-body" id="voiceBody">
+            <div class="message bot-msg">Pulsa el botón y háblame:<br>• <b>Colores:</b> rojo, azul, verde, amarillo, morado, naranja, celeste, dorado, rosado, gris, oscuro...<br>• <b>Idiomas:</b> español, inglés, portugués, francés, italiano<br>• <b>Secciones:</b> inicio, historia, nosotros, servicios, carreras, contacto, juego, emociones, promedio<br>• <b>Reiniciar:</b> "volver al estado normal"</div>
+        </div>
+        <div class="voice-footer">
+            <button id="btnHablar" class="btn-hablar" onclick="activarVoz()">🎤 Pulsar para hablar</button>
+        </div>
+    </div>
+      
+    <footer>
+        <p id="textoFooter">&copy; 2026 Universidad Técnica Luis Vargas Torres de Esmeraldas - Sede Santo Domingo</p>
+    </footer>
+
+   <script>
+        /* ==============================================================
+           PARTE 1: CHATBOT DE TEXTO ORIGINAL (INTACTO)
+           ============================================================== */
+        function toggleChat() {
+            const chat = document.getElementById('chatWindow');
+            chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        const baseDeDatosBot = [
+            {
+                palabras: ['admision', 'admisión', 'cupo', 'requisito', 'inscribir', 'postular', 'ingreso', 'inscripcion'],
+                respuesta: 'El proceso de admisión requiere: copia de cédula, título de bachiller y registro en la plataforma oficial de la UTLVTE.'
+            },
+            {
+                palabras: ['carrera', 'carreras', 'oferta', 'estudiar', 'profesion', 'titulos'],
+                respuesta: 'Se ofrecen las carreras de Administracion de Empresas, Contabilidad y Auditoria, Tecnologias de la Información (TICS).'
+            },
+            {
+                palabras: ['horarios', 'clases', 'jornada', 'turno', 'seccion'],
+                respuesta: 'Las clases se imparten en jornadas matutina de 7:30 a.m  a 12:30 a.m y vespertina de 13:00 p.m a 18:00 p.m. Los horarios oficiales se publican antes de iniciar el ciclo.'
+            },
+            {
+                palabras: ['ubicacion', 'direccion', 'donde', 'llegar', 'mapa', 'queda'],
+                respuesta: 'Nos encontramos en el Km 1.5 Vía La Villegas, Cantón La Concordia, Santo Domingo de los Tsáchilas, Ecuador.'
+            },
+            {
+                palabras: ['costo', 'precio', 'pagar', 'cuota', 'pension', 'gratis', 'valor'],
+                respuesta: 'Estudiar en la UTLVTE no tiene costo, es una universidad pública y de educación superior totalmente gratuita.'
+            },
+            {
+                palabras: ['contacto', 'telefono', 'correo', 'email', 'secretaria', 'atencion'],
+                respuesta: 'Puedes escribir al correo: admision.santodomingo@ute-lvt.edu.ec o llamar al (02) 275-0000.'
+            }
+        ];
+
+        function getBotResponse(input) {
+            const textoUsuario = input.toLowerCase();
+
+            for (let item of baseDeDatosBot) {
+                if (item.palabras.some(palabra => textoUsuario.includes(palabra))) {
+                    return item.respuesta;
+                }
+            }
+
+            return 'Lo siento, no reconozco esa consulta. Puedes preguntarme sobre: admisiones, carreras, horarios, ubicación, costos o contactos.';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatBody = document.getElementById('chatBody');
+
+            chatBody.innerHTML += `<div class="message user-msg">${text}</div>`;
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                const respuestaBot = getBotResponse(text);
+                chatBody.innerHTML += `<div class="message bot-msg">${respuestaBot}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 500);
+        }
+
+        /* ==============================================================
+           PARTE 2: CHATBOX DE AUDIO (COLORES, IDIOMAS, NORMAL Y SECCIONES)
+           ============================================================== */
+        let idiomaPagina = 'es';
+
+        const configIdiomas = {
+            es: {
+                speechLang: 'es-EC',
+                sub1: 'UNIVERSIDAD TÉCNICA "LUIS VARGAS TORRES" DE ESMERALDAS',
+                sub2: 'SEDE SANTO DOMINGO - LA CONCORDIA',
+                titulo: 'Bienvenidos a la Universidad Técnica "Luis Vargas Torres" Sede Santo Domingo',
+                frase: '<b>"Con la determinación de Luis Vargas Torres y la fuerza de tus sueños, ningún examen es demasiado grande: hoy estudias, mañana lideras. ¡La UTLVTE te espera!"</b>',
+                footer: '© 2026 Universidad Técnica Luis Vargas Torres de Esmeraldas - Sede Santo Domingo',
+                btnHablar: '🎤 Pulsar para hablar',
+                confirmacion: 'Idioma cambiado a español.'
+            },
+            en: {
+                speechLang: 'en-US',
+                sub1: 'TECHNICAL UNIVERSITY "LUIS VARGAS TORRES" OF ESMERALDAS',
+                sub2: 'SANTO DOMINGO - LA CONCORDIA CAMPUS',
+                titulo: 'Welcome to the Technical University "Luis Vargas Torres" Santo Domingo Campus',
+                frase: '<b>"With the determination of Luis Vargas Torres and the strength of your dreams, no exam is too big: today you study, tomorrow you lead. UTLVTE awaits you!"</b>',
+                footer: '© 2026 Technical University Luis Vargas Torres of Esmeraldas - Santo Domingo Campus',
+                btnHablar: '🎤 Press to speak',
+                confirmacion: 'Language changed to English.'
+            },
+            pt: {
+                speechLang: 'pt-BR',
+                sub1: 'UNIVERSIDADE TÉCNICA "LUIS VARGAS TORRES" DE ESMERALDAS',
+                sub2: 'CAMPUS SANTO DOMINGO - LA CONCORDIA',
+                titulo: 'Bem-vindos à Universidade Técnica "Luis Vargas Torres" Campus Santo Domingo',
+                frase: '<b>"Com a determinação de Luis Vargas Torres e a força dos seus sonhos, nenhum exame é grande demais: hoje você estuda, amanhã lidera. A UTLVTE espera por você!"</b>',
+                footer: '© 2026 Universidade Técnica Luis Vargas Torres de Esmeraldas - Campus Santo Domingo',
+                btnHablar: '🎤 Pressione para falar',
+                confirmacion: 'Idioma alterado para português.'
+            },
+            fr: {
+                speechLang: 'fr-FR',
+                sub1: 'UNIVERSITÉ TECHNIQUE "LUIS VARGAS TORRES" D\'ESMERALDAS',
+                sub2: 'CAMPUS SANTO DOMINGO - LA CONCORDIA',
+                titulo: 'Bienvenue à l\'Université Technique "Luis Vargas Torres" Campus Santo Domingo',
+                frase: '<b>"Avec la détermination de Luis Vargas Torres et la force de vos rêves, aucun examen n\'est trop grand : aujourd\'hui vous étudiez, demain vous dirigez. L\'UTLVTE vous attend !"</b>',
+                footer: '© 2026 Université Technique Luis Vargas Torres d\'Esmeraldas - Campus Santo Domingo',
+                btnHablar: '🎤 Appuyez pour parler',
+                confirmacion: 'Langue changée en français.'
+            },
+            it: {
+                speechLang: 'it-IT',
+                sub1: 'UNIVERSITÀ TECNICA "LUIS VARGAS TORRES" DI ESMERALDAS',
+                sub2: 'SEDE SANTO DOMINGO - LA CONCORDIA',
+                titulo: 'Benvenuti all\'Università Tecnica "Luis Vargas Torres" Sede Santo Domingo',
+                frase: '<b>"Con la determinazione di Luis Vargas Torres e la forza dei tuoi sogni, nessun esame è troppo grande: oggi studi, domani guidi. L\'UTLVTE ti aspetta!"</b>',
+                footer: '© 2026 Università Tecnica Luis Vargas Torres di Esmeraldas - Sede Santo Domingo',
+                btnHablar: '🎤 Premi per parlare',
+                confirmacion: 'Lingua cambiata in italiano.'
+            }
+        };
+
+        function toggleVoiceChat() {
+            const voiceWin = document.getElementById('voiceWindow');
+            voiceWin.style.display = (voiceWin.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function responderConAudio(texto) {
+            const voiceBody = document.getElementById('voiceBody');
+            voiceBody.innerHTML += `<div class="message bot-msg">${texto}</div>`;
+            voiceBody.scrollTop = voiceBody.scrollHeight;
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const voz = new SpeechSynthesisUtterance(texto);
+                voz.lang = configIdiomas[idiomaPagina].speechLang;
+                window.speechSynthesis.speak(voz);
+            }
+        }
+
+        function aplicarIdioma(lang) {
+            idiomaPagina = lang;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const traduccion = link.getAttribute('data-' + lang);
+                if (traduccion) link.textContent = traduccion;
+            });
+
+            const datos = configIdiomas[lang];
+            document.getElementById('sub1').textContent = datos.sub1;
+            document.getElementById('sub2').textContent = datos.sub2;
+            document.getElementById('tituloPrincipal').textContent = datos.titulo;
+            document.getElementById('frasePrincipal').innerHTML = datos.frase;
+            document.getElementById('textoFooter').textContent = datos.footer;
+            document.getElementById('btnHablar').textContent = datos.btnHablar;
+
+            if (reconocimiento) {
+                reconocimiento.lang = datos.speechLang;
+            }
+        }
+
+        function ejecutarAccionPorVoz(frase) {
+            const cmd = frase.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            // 1. VOLVER AL ESTADO NORMAL (Restaura color original e idioma español)
+            if (cmd.includes('normal') || cmd.includes('original') || cmd.includes('restaurar') ||
+                cmd.includes('reiniciar') || cmd.includes('predeterminado') || cmd.includes('defecto') ||
+                cmd.includes('reset') || cmd.includes('padrao')) {
+                document.body.style.backgroundColor = '#f4f6f8';
+                aplicarIdioma('es');
+                responderConAudio('Página restaurada a su estado normal: color original e idioma español.');
+                return;
+            }
+
+            // 2. CAMBIAR COLOR DE FONDO (Amplia variedad de colores)
+            const listaColores = [
+                { claves: ['azul oscuro', 'azul marino', 'navy'], hex: '#90caf9', nombre: 'azul oscuro' },
+                { claves: ['verde oscuro', 'esmeralda'], hex: '#a5d6a7', nombre: 'verde oscuro' },
+                { claves: ['rojo', 'red', 'vermelho'], hex: '#ffcdd2', nombre: 'rojo' },
+                { claves: ['azul', 'blue'], hex: '#bbdefb', nombre: 'azul' },
+                { claves: ['celeste', 'turquesa', 'cyan', 'aqua'], hex: '#b2ebf2', nombre: 'celeste' },
+                { claves: ['verde', 'green'], hex: '#c8e6c9', nombre: 'verde' },
+                { claves: ['amarillo', 'yellow', 'amarelo'], hex: '#fff9c4', nombre: 'amarillo' },
+                { claves: ['dorado', 'oro', 'gold'], hex: '#ffecb3', nombre: 'dorado' },
+                { claves: ['naranja', 'anaranjado', 'orange', 'laranja'], hex: '#ffe0b2', nombre: 'naranja' },
+                { claves: ['morado', 'violeta', 'lila', 'purple', 'roxo'], hex: '#e1bee7', nombre: 'morado' },
+                { claves: ['rosado', 'rosa', 'pink'], hex: '#f8bbd0', nombre: 'rosado' },
+                { claves: ['cafe', 'marron', 'brown', 'marrom'], hex: '#d7ccc8', nombre: 'café' },
+                { claves: ['gris', 'plateado', 'gray', 'cinza'], hex: '#cfd8dc', nombre: 'gris' },
+                { claves: ['negro', 'oscuro', 'nocturno', 'black', 'dark', 'preto'], hex: '#222222', nombre: 'oscuro' },
+                { claves: ['blanco', 'white', 'branco'], hex: '#ffffff', nombre: 'blanco' },
+                { claves: ['beige', 'crema'], hex: '#f5f5dc', nombre: 'crema' }
+            ];
+
+            for (let itemColor of listaColores) {
+                if (itemColor.claves.some(c => cmd.includes(c))) {
+                    document.body.style.backgroundColor = itemColor.hex;
+                    responderConAudio(`Color de fondo cambiado a ${itemColor.nombre}.`);
+                    return;
+                }
+            }
+
+            // 3. CAMBIAR IDIOMA (Español, Inglés, Portugués, Francés, Italiano)
+            const idiomasDetectables = [
+                { claves: ['portugues', 'portuguese'], codigo: 'pt' },
+                { claves: ['ingles', 'english'], codigo: 'en' },
+                { claves: ['frances', 'french', 'francais'], codigo: 'fr' },
+                { claves: ['italiano', 'italian'], codigo: 'it' },
+                { claves: ['espanol', 'spanish', 'castellano'], codigo: 'es' }
+            ];
+
+            for (let langItem of idiomasDetectables) {
+                if (langItem.claves.some(k => cmd.includes(k))) {
+                    aplicarIdioma(langItem.codigo);
+                    responderConAudio(configIdiomas[langItem.codigo].confirmacion);
+                    return;
+                }
+            }
+
+            // 4. DIRIGIR A TODAS LAS SECCIONES DEL MENÚ
+            const todasLasSecciones = [
+                { palabras: ['inicio', 'principal', 'portada', 'home'], archivo: 'index.html', titulo: 'Inicio' },
+                { palabras: ['historia', 'history'], archivo: 'historia.html', titulo: 'Historia' },
+                { palabras: ['nosotros', 'quienes somos', 'about', 'sobre nos'], archivo: 'nosotros.html', titulo: 'Nosotros' },
+                { palabras: ['servicios', 'servicio', 'services', 'servicos'], archivo: 'servicios.html', titulo: 'Servicios' },
+                { palabras: ['carreras', 'carrera', 'majors', 'cursos'], archivo: 'carreras.html', titulo: 'Carreras' },
+                { palabras: ['contacto', 'contactos', 'contact', 'contato'], archivo: 'contacto.html', titulo: 'Contacto' },
+                { palabras: ['juego', 'juegos', 'jugar', 'game', 'jogo'], archivo: 'juego.html', titulo: 'Juego' },
+                { palabras: ['emociones', 'emocion', 'emotions', 'emocoes'], archivo: 'emociones.html', titulo: 'Emociones' },
+                { palabras: ['promedio', 'promedios', 'notas', 'gpa', 'media'], archivo: 'promedio.html', titulo: 'Promedio' }
+            ];
+
+            for (let sec of todasLasSecciones) {
+                if (sec.palabras.some(p => cmd.includes(p))) {
+                    responderConAudio(`Dirigiéndote a la sección ${sec.titulo}.`);
+                    setTimeout(() => {
+                        window.location.href = sec.archivo;
+                    }, 1500);
+                    return;
+                }
+            }
+
+            // 5. ACCIONES ADICIONALES
+            if (cmd.includes('leer') || cmd.includes('read') || cmd.includes('ler')) {
+                const textoLeer = document.getElementById('tituloPrincipal').textContent + '. ' + document.getElementById('frasePrincipal').textContent;
+                responderConAudio(textoLeer);
+                return;
+            }
+
+            responderConAudio('No reconocí ese comando. Puedes decir un color, un idioma como portugués o inglés, una sección, o "volver al estado normal".');
+        }
+
+        // Inicializar reconocimiento de voz
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let reconocimiento = null;
+
+        if (SpeechRecognition) {
+            reconocimiento = new SpeechRecognition();
+            reconocimiento.lang = 'es-EC';
+            reconocimiento.continuous = false;
+            reconocimiento.interimResults = false;
+
+            reconocimiento.onstart = function () {
+                const btn = document.getElementById('btnHablar');
+                btn.classList.add('escuchando');
+                btn.textContent = '🔴 Escuchando... habla ahora';
+            };
+
+            reconocimiento.onresult = function (event) {
+                const textoHablado = event.results[0][0].transcript;
+                const voiceBody = document.getElementById('voiceBody');
+                voiceBody.innerHTML += `<div class="message user-msg">${textoHablado}</div>`;
+                voiceBody.scrollTop = voiceBody.scrollHeight;
+
+                ejecutarAccionPorVoz(textoHablado);
+            };
+
+            reconocimiento.onend = function () {
+                const btn = document.getElementById('btnHablar');
+                btn.classList.remove('escuchando');
+                btn.textContent = configIdiomas[idiomaPagina].btnHablar;
+            };
+
+            reconocimiento.onerror = function (event) {
+                const btn = document.getElementById('btnHablar');
+                btn.classList.remove('escuchando');
+                btn.textContent = configIdiomas[idiomaPagina].btnHablar;
+                responderConAudio('Error de micrófono (' + event.error + '). Abre la página con Live Server en Chrome o Edge.');
+            };
+        }
+
+        function activarVoz() {
+            if (!reconocimiento) {
+                alert('Tu navegador no soporta reconocimiento de voz. Usa Google Chrome o Microsoft Edge.');
+                return;
+            }
+            try {
+                reconocimiento.start();
+            } catch (e) {
+                reconocimiento.stop();
+            }
+        }
+    </script>
+
+    <!-- === INICIO SISTEMA DE GESTOS MEDIAPIPE (COPIAR Y PEGAR ANTES DE </body>) === -->
+<div id="panel-gestos" style="position: fixed; bottom: 15px; left: 15px; z-index: 99999; background: rgba(0, 77, 38, 0.9); color: white; padding: 8px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-family: sans-serif; text-align: center; width: 150px;">
+  <video id="webcam-gestos" autoplay playsinline muted style="width: 100%; border-radius: 8px; transform: scaleX(-1); display: block; background: #000;"></video>
+  <div id="estado-gesto" style="font-size: 11px; margin-top: 5px; font-weight: bold;">Cargando IA...</div>
+</div>
+
+<script type="module">
+  import {
+    FilesetResolver,
+    GestureRecognizer
+  } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs";
+
+  const video = document.getElementById("webcam-gestos");
+  const estadoTexto = document.getElementById("estado-gesto");
+  let gestureRecognizer;
+  let lastVideoTime = -1;
+  let ultimoGesto = "";
+  let tiempoUltimo = 0;
+
+  async function iniciar() {
+    try {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+      );
+
+      gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+          delegate: "GPU"
+        },
+        runningMode: "VIDEO",
+        numHands: 1
+      });
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      video.addEventListener("loadeddata", () => {
+        estadoTexto.innerText = "✋ Listo (Haz un gesto)";
+        bucleDeteccion();
+      });
+    } catch (err) {
+      console.error(err);
+      estadoTexto.innerText = "❌ Activa la cámara / Live Server";
+    }
+  }
+
+  function bucleDeteccion() {
+    if (video.readyState >= 2 && video.currentTime !== lastVideoTime) {
+      lastVideoTime = video.currentTime;
+      const resultados = gestureRecognizer.recognizeForVideo(video, performance.now());
+
+      if (resultados.gestures && resultados.gestures.length > 0) {
+        const gesto = resultados.gestures[0][0];
+        if (gesto.score > 0.65 && gesto.categoryName !== "None") {
+          ejecutarGesto(gesto.categoryName);
+        }
+      }
+    }
+    requestAnimationFrame(bucleDeteccion);
+  }
+
+  function ejecutarGesto(nombre) {
+    const ahora = Date.now();
+    // Pausa de 1.2 segundos entre acciones para evitar repeticiones accidentales
+    if (nombre === ultimoGesto && ahora - tiempoUltimo < 1200) return;
+
+    ultimoGesto = nombre;
+    tiempoUltimo = ahora;
+
+    switch (nombre) {
+      case "Thumb_Up":
+        estadoTexto.innerText = "👍 Bajando...";
+        window.scrollBy({ top: 450, behavior: "smooth" });
+        break;
+
+      case "Thumb_Down":
+        estadoTexto.innerText = "👎 Subiendo...";
+        window.scrollBy({ top: -450, behavior: "smooth" });
+        break;
+
+      case "Open_Palm":
+        estadoTexto.innerText = "✋ Asistente";
+        // Busca cualquier botón del asistente en tu página y le hace clic
+        const btn = document.querySelector("#asistente-btn, .asistente-btn, #btn-asistente, [onclick*='asistente'], [onclick*='toggle']");
+        if (btn) btn.click();
+        break;
+
+      case "Victory":
+        estadoTexto.innerText = "✌️ Ir a Carreras";
+        if (!window.location.href.includes("carreras.html")) {
+          window.location.href = "carreras.html";
+        }
+        break;
+
+      case "Closed_Fist":
+        estadoTexto.innerText = "✊ Ir a Inicio";
+        if (!window.location.href.includes("index.html")) {
+          window.location.href = "index.html";
+        }
+        break;
+
+      case "Pointing_Up":
+        estadoTexto.innerText = "☝️ Ir a Juego";
+        if (!window.location.href.includes("juego.html")) {
+          window.location.href = "juego.html";
+        }
+        break;
+
+      case "ILoveYou":
+        estadoTexto.innerText = "🤟 Emociones";
+        if (!window.location.href.includes("emociones.html")) {
+          window.location.href = "emociones.html";
+        }
+        break;
+    }
+  }
+
+  iniciar();
+</script>
+<!-- === FIN SISTEMA DE GESTOS MEDIAPIPE === -->
+
+
+
+
+</body>
+</html>
